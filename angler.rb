@@ -1,35 +1,49 @@
-# Documentation: https://docs.brew.sh/Formula-Cookbook
-#                https://rubydoc.brew.sh/Formula
-# PLEASE REMOVE ALL GENERATED COMMENTS BEFORE SUBMITTING YOUR PULL REQUEST!
 class Angler < Formula
+  include Language::Python::Virtualenv
+
   desc "A tool to generate typescript openapi for microservices gateways with multiple definitions"
   homepage "https://github.com/Deitsch/angler"
   url "https://github.com/Deitsch/angler/archive/refs/tags/v0.0.2.tar.gz"
   sha256 "a50cf369578f5aa220cdf9c9ed3e5411b83fd49f49052c25998f2252530391cb"
   license "MIT"
+  revision 1
+  head "https://github.com/Deitsch/angler.git", branch: "main"
 
-  depends_on "python@3.9"
   depends_on "openapi-generator"
+  depends_on "python@3.10"
 
   def install
-    # ENV.deparallelize  # if your formula fails when building in parallel
-    # Remove unrecognized options if warned by configure
-    # https://rubydoc.brew.sh/Formula.html#std_configure_args-instance_method
-    # system "./configure", *std_configure_args, "--disable-silent-rules"
-    # system "cmake", "-S", ".", "-B", "build", *std_cmake_args
-    bin.install 'angler'
+    xy = Language::Python.major_minor_version "python3"
+    site_packages = "lib/python#{xy}/site-packages"
+    angler_package = libexec/site_packages/"angler"  # Location of angler in site-packages
+
+    # Copy each file to the install directory
+    %w[angler anglerEnums.py anglerGen.py anglerHelperFunctions.py].each do |file|
+      angler_package.install file
+    end
+
+    # Modify import path to allow for angler to be used as a library
+    (angler_package/"__init__.py").write <<~EOS
+      import sys
+      sys.path.append("#{angler_package}")
+    EOS
+
+    # Symlink angler to /usr/local/bin
+    bin.install_symlink angler_package/"angler"
+
+    # Allow angler to be imported from /usr/local/bin/python
+    pth_contents = "import site; site.addsitedir('#{libexec/site_packages}')\n"
+    (prefix/site_packages/"homebrew-angler.pth").write pth_contents
   end
 
   test do
-    # `test do` will create, run in and delete a temporary directory.
-    #
-    # This test will fail and we won't accept that! For Homebrew/homebrew-core
-    # this will need to be a test that verifies the functionality of the
-    # software. Run the test with `brew test angler`. Options passed
-    # to `brew install` such as `--HEAD` also need to be provided to `brew test`.
-    #
-    # The installed folder is not in the path, so use the entire path to any
-    # executables being tested: `system "#{bin}/program", "do", "something"`.
-    system "false"
+    # Basic CLT help test
+    assert_equal shell_output("#{bin}/angler --help").lines.third, "A swagger gen for microservices\n"
+
+    # Library test
+    system Formula["python@3.10"].opt_bin/"python3", "-c", <<~EOS
+      from angler.anglerHelperFunctions import __extractPath
+      assert __extractPath("http://localhost:8002/swagger/") == "//localhost"
+    EOS
   end
 end
