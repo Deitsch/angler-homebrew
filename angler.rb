@@ -4,7 +4,7 @@ class Angler < Formula
   desc "A tool to generate typescript openapi for microservices gateways with multiple definitions"
   homepage "https://github.com/Deitsch/angler"
   url "https://github.com/Deitsch/angler/archive/refs/tags/v0.0.3.tar.gz"
-  sha256 "546b684c0353510d8bf8c36c831f084b5419f65af6ad09e0c46b2b026ad38f61"
+  sha256 "ec7960cac599a6a1b6a11ed4e885fb8c11be53662b6f9340abba33380fc3fa47"
   license "MIT"
   revision 1
   head "https://github.com/Deitsch/angler.git", branch: "main"
@@ -18,7 +18,7 @@ class Angler < Formula
     angler_package = libexec/site_packages/"angler"  # Location of angler in site-packages
 
     # Copy each file to the install directory
-    %w[angler anglerEnums.py anglerGen.py anglerHelperFunctions.py anglerOpenAPIfix.py].each do |file|
+    %w[angler anglerEnums.py anglerGen.py anglerHelperFunctions.py anglerOpenAPIfix.py version].each do |file|
       angler_package.install file
     end
 
