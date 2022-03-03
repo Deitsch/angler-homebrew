@@ -6,7 +6,7 @@ class Angler < Formula
   url "https://github.com/Deitsch/angler/archive/refs/tags/v0.0.5.tar.gz"
   sha256 "9b7354b5467ac5db4c9cce8dac37921ee6d00053430ee3872fce262630a1f15d"
   license "MIT"
-  revision 1
+  revision 2
   head "https://github.com/Deitsch/angler.git", branch: "main"
 
   depends_on "openapi-generator"
