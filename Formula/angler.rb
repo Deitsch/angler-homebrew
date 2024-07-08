@@ -3,8 +3,8 @@ class Angler < Formula
 
   desc "A tool to generate typescript openapi for microservices gateways with multiple definitions"
   homepage "https://github.com/Deitsch/angler"
-  url "https://github.com/Deitsch/angler/archive/refs/tags/v0.2.0.tar.gz"
-  sha256 "44e7e47dd68891179fc59d11e17cb4e0706a690c9d4192f5dab93fe99fb88d84"
+  url "https://github.com/Deitsch/angler/archive/refs/tags/v0.3.0.tar.gz"
+  sha256 "430c412d3bb0aa950f46fddd764e05d1193a11db53eee109925c4907f267e0ab"
   license "MIT"
   revision 1
   head "https://github.com/Deitsch/angler.git", branch: "main"
