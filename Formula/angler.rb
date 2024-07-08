@@ -18,7 +18,7 @@ class Angler < Formula
     angler_package = libexec/site_packages/"angler"  # Location of angler in site-packages
 
     # Copy each file to the install directory
-    %w[main.py angler.py anglerEnums.py anglerOpenAPIfix.py version].each do |file|
+    %w[main.py angler.py anglerEnums.py version].each do |file|
       angler_package.install file
     end
 
